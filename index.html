@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>স্টেপ মেকার ক্যালকুলেটর</title>
+    <style>
+        :root {
+            --primary-blue: #007BFF;
+            --telegram-blue: #0088CC; /* Telegram button color */
+            --page-bg: #F0F2F5;
+            --border-color: #CED4DA;
+            --shadow-color: rgba(0, 0, 0, 0.07);
+            --text-dark: #333;
+            --text-light: #555;
+            --focus-gold: #FFC107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--page-bg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 15px;
+            box-sizing: border-box;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: #FFFFFF;
+            padding: 25px 30px 30px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid #EAEAEA;
+        }
+
+        .header-title {
+            color: var(--primary-blue);
+            text-align: center;
+            margin: 0 0 30px 0;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--focus-gold);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0069D9;
+        }
+        
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 20px;
+            background-color: #FFFFFF;
+        }
+        
+        .result-box h2 {
+            text-align: center;
+            color: var(--text-dark);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .step-result-item {
+            background-color: #FFFFFF;
+            border: 1px solid #E9ECEF;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-align: left;
+        }
+        
+        .total-display {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #DEE2E6;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        #error-message-display {
+            color: var(--error-color);
+            text-align: center;
+            font-weight: 500;
+            min-height: 24px;
+            margin-top: 15px;
+        }
+        
+        /* *** Developer Credit এর নতুন স্টাইল *** */
+        .developer-credit {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 15px; /* টেলিগ্রাম বাটন থেকে দূরত্ব */
+            font-size: 18px;
+            color: #4A4A4A;
+            font-weight: 600;
+        }
+        
+        /* *** টেলিগ্রাম বাটনের নতুন স্টাইল *** */
+        .telegram-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px; 
+            width: 93%;
+            padding: 12px;
+            background-color: var(--telegram-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+        
+        .telegram-btn:hover {
+            background-color: #0077B5; 
+        }
+        
+        .telegram-btn .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1 class="header-title">স্টেপ মেকার ক্যালকুলেটর</h1>
+
+        <div class="form-group">
+            <label for="totalAmount">মোট টাকা (৳):</label>
+            <input type="number" id="totalAmount" class="form-control" placeholder="মোট টাকা লিখুন">
+        </div>
+
+        <div class="form-group">
+            <label for="stepCount">স্টেপ সংখ্যা:</label>
+            <input type="number" id="stepCount" class="form-control" placeholder="স্টেপের সংখ্যা দিন" value="7">
+        </div>
+
+        <button id="calculateBtn" class="submit-btn">স্টেপ তৈরি করুন</button>
+        
+        <p id="error-message-display"></p>
+
+        <div class="result-box" id="result">
+            <h2>স্টেপ রেজাল্ট:</h2>
+            <div id="step-list-container"></div>
+            <div class="total-display" id="final-total-display"></div>
+        </div>
+        
+        <div class="developer-credit">
+            Developed by: TAMIM HASAN
+        </div>
+
+        <a href="https://t.me/TRADER_TAMIM_DK" target="_blank" class="telegram-btn">
+            <div class="logo-container">
+                <svg viewBox="0 0 32 32" style="width: 100%; height: 100%;">
+                    <circle cx="16" cy="16" r="16" fill="white"></circle>
+                    <path fill="#0088CC" d="M10.1,15.2l8.2-4.4c0.4-0.2,0.7,0.1,0.5,0.5l-2.5,8.8c-0.2,0.6-0.7,0.7-1.2,0.4l-3.1-2.3 c-0.5-0.4-1.2-0.4-1.7,0l-1.1,1c-0.3,0.3-0.8,0.1-0.9-0.3l-1.1-3.7C7.2,15,9.6,15.4,10.1,15.2z"></path>
+                </svg>
+            </div>
+            <span>Join Telegram</span>
+        </a>
+
+    </div>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+            const stepCount = parseInt(document.getElementById('stepCount').value);
+
+            const resultContainer = document.getElementById('result');
+            const stepListDiv = document.getElementById('step-list-container');
+            const totalDisplay = document.getElementById('final-total-display');
+            const errorMessage = document.getElementById('error-message-display');
+
+            stepListDiv.innerHTML = '';
+            errorMessage.textContent = '';
+            
+            if (isNaN(totalAmount) || totalAmount <= 0) {
+                errorMessage.textContent = 'অনুগ্রহ করে সঠিক পরিমাণ টাকা লিখুন।';
+                resultContainer.style.display = 'none';
+                return;
+            }
+            if (isNaN(stepCount) || stepCount <= 0) {
+                errorMessage.textContent = 'অনুগ্রহ করে সঠিক স্টেপ সংখ্যা দিন।';
+                resultContainer.style.display = 'none';
+                return;
+            }
+            if (stepCount > 25) {
+                errorMessage.textContent = 'স্টেপ সংখ্যা অনেক বেশি। অনুগ্রহ করে ২৫ এর কম দিন।';
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            const divisor = Math.pow(2, stepCount) - 1;
+            
+            if (divisor <= 0) {
+                 errorMessage.textContent = 'ক্যালকুলেশনে সমস্যা হয়েছে। স্টেপ সংখ্যা ১ বা তার বেশি দিন।';
+                 resultContainer.style.display = 'none';
+                 return;
+            }
+            
+            let firstStep = totalAmount / divisor;
+            let runningTotal = 0;
+
+            for (let i = 0; i < stepCount; i++) {
+                let currentStepValue;
+                
+                if (i === stepCount - 1) {
+                    currentStepValue = totalAmount - runningTotal;
+                } else {
+                    currentStepValue = firstStep * Math.pow(2, i);
+                }
+                
+                runningTotal += currentStepValue;
+
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'step-result-item';
+                stepDiv.textContent = `স্টেপ ${i + 1}: ${Math.floor(currentStepValue)} ৳`;
+                stepListDiv.appendChild(stepDiv);
+            }
+
+            totalDisplay.textContent = `মোট ব্যবহৃত: ${totalAmount.toFixed(0)} ৳`;
+            resultContainer.style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>
